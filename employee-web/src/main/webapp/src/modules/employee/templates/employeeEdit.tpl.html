@@ -1,0 +1,38 @@
+<div>
+    <nav class="navbar navbar-default col-md-7 col-md-offset-2" role="navigation">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#custom-navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand">Employees</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="navbar-collapse" id="custom-navbar">
+                <button id="create-edit" class="btn btn-sm btn-default navbar-btn" ng-click="ctrl.saveEmployee();"><span class="glyphicon glyphicon-save"></span> Save</button>
+                <a ui-sref="employees">
+                    <button id="back" class="btn btn-sm btn-default navbar-btn"><span class="glyphicon glyphicon-chevron-left"></span> Back</button>
+                </a>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<div class="col-md-7 col-md-offset-2">
+    <div class="panel">
+        <div class="panel-body">
+            <div class="form-group container-fluid well" >
+
+                  <label>Name: </label><input class="form-control"type="text" ng-model="employee.name" required/><br>
+                  <label>Salary: </label><input class="form-control"type="number" ng-model="employee.salary" required/><br>
+                  <label>Image: </label><input class="form-control" type="text" ng-model="employee.image" required/><br>
+                  <label>Gender: </label><input class="form-control"type="number" ng-model="employee.gender" required/><br>
+            </div>
+        </div>
+    </div>
+</div>

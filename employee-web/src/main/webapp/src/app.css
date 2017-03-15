@@ -1,0 +1,13 @@
+/* Logo */
+.logo {
+  margin-top: -5px;
+  width:auto;
+  height:35px;
+  background: white;
+  padding: 5px;
+  border-radius: 6%;
+}
+/* body */
+body {
+  background-color: rgba(25, 16, 159, 0.2);
+}

@@ -1,0 +1,37 @@
+<div>
+    <nav class="navbar navbar-default col-md-7 col-md-offset-2" role="navigation">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#custom-navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand">Employees</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="navbar-collapse" id="custom-navbar">
+                <button id="fetch" class="btn btn-sm btn-default navbar-btn" ng-click="ctrl.fetchEmployee();"><span class="glyphicon glyphicon-refresh"></span> Fetch</button>
+                <a ui-sref="employees">
+                    <button id="back" class="btn btn-sm btn-default navbar-btn"><span class="glyphicon glyphicon-chevron-left"></span> Back</button>
+                </a>
+            </div>
+        </div>
+    </nav>
+</div>
+
+<div class="col-md-7 col-md-offset-2">
+    <div class="panel">
+        <div class="panel-body">
+            <div class="container-fluid well" ng-scope="employee">
+                  <label>Name: </label> {{employee.name}} <br>
+                  <label>Salary: </label> {{employee.salary}} <br>
+                  <label>Image: </label> {{employee.image}} <br>
+                  <label>Gender: </label> {{employee.gender}} <br>
+            </div>
+        </div>
+    </div>
+</div>

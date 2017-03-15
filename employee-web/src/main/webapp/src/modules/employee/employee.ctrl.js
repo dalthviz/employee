@@ -1,57 +1,127 @@
 /*
-The MIT License (MIT)
-
-Copyright (c) 2015 Los Andes University
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
++ Controlador de la vista de usuarios en lista
 */
 (function (ng) {
-    var mod = ng.module('employeeModule');
 
-    mod.controller('employeeCtrl', ['$scope', 'model',
-        function ($scope, model) {
-            $scope.model = model;
-            //Alertas
-            $scope.alerts = [];
-            this.closeAlert = function (index) {
-                $scope.alerts.splice(index, 1);
-            };
+    var module = ng.module("employeeModule");
 
-            /* Función showMessage: Recibe el mensaje en String y
-             * su tipo con el fin de almacenarlo en el array $scope.alerts.
-             */
-            function showMessage(msg, type) {
-                var types = ["info", "danger", "warning", "success"];
-                if (types.some(function (rc) {
-                    return type === rc;
-                })) {
-                    $scope.alerts.push({type: type, msg: msg});
+    //Controlador para la lista de employees
+    module
+        .controller('employeeListCtrl', ['$scope', 'employeeService',
+            function($scope, svc) {
+              $scope.hola= "hola";
+              var self = this;
+              $scope.employees = [];
+
+              
+              this.fetchEmployees = function(){
+              
+                      return svc.fetchEmployees().then(function(resp){
+                                                  $scope.employees = resp.data;
+                                                  return resp;
+                                                }).catch(function(error){
+                                                  console.error(error);
+                                                  return error;
+                                                });
+                                              };
+
+              this.deleteEmployee = function(employee){
+                var index = $scope.employees.indexOf(employee);
+                  //if(index!=-1){
+                   // $scope.employees.splice(index, 1);
+                    //}
+                    return svc.deleteEmployee(employee.id).then(function(resp){
+                                                  self.fetchEmployees();
+                                                return resp;
+                                              });
+                                            };
+
+                self.fetchEmployees();
+              }
+
+        ]);
+
+    // Controlador para editar/crear un employee
+    module
+        .controller('employeeEditCtrl', ['employeeService', '$stateParams', '$scope','$state', '$window',
+            function(svc, $stateParams, $scope, $state, $window){
+
+                var self = this;
+                var idEmployee = $stateParams.id;
+
+                this.fetchEmployee = function(){
+                    if (idEmployee != 'new'){
+                      return  svc.fetchEmployee(idEmployee).then(function(resp){
+                                                    $scope.employee = resp.data;
+                                                    return resp;
+                                                  }).catch(function(error){
+                                                    console.log(error);
+                                                    return error;
+                                                  });
+                                       }
+                   };
+                                                
+                if ( idEmployee == 'new') {
+                    $scope.employee = { name: '',
+                                        salary: 0,
+                                        image: '',
+                                        gender: 0
+                                      };
+                } else {
+                    var resp = self.fetchEmployee();
+                    console.log(resp);
                 }
+
+
+
+                this.saveEmployee = function() {
+                    if ( idEmployee == 'new') {
+                      $state.go('employees');
+                        return svc.saveEmployee($scope.employee)
+                                          .then(function(resp){
+                                          return resp;
+                                        });
+                    } else {
+                      console.log($scope.employee);
+                      $state.go('employees');
+                      return svc.updateEmployee($scope.employee, idEmployee)
+                                            .then(function(resp){
+                                              self.fetchEmployee();
+                                              return resp;
+                                            }).catch(function(error){
+                                              console.log(error);
+                                              return error;
+                                            });
+                    }
+
+                };
+
+
             }
+        ]);
 
-            $scope.showError = function (msg) {
-                showMessage(msg, "danger");
-            };
+        //Controlador para el detalle de un employee
+        module
+            .controller('employeeDetailCtrl', ['$scope', 'employeeService', '$stateParams',
+                function($scope, svc, $stateParams) {
 
-            $scope.showSuccess = function (msg) {
-                showMessage(msg, "success");
-            };
-        }]);
+                  var self = this;
+                  var idEmployee = $stateParams.id;
+                  $scope.employee = {};
+
+                  this.fetchEmployee = function(){
+                        return  svc.fetchEmployee(idEmployee).then(function(resp){
+                                                      $scope.employee = resp.data;
+                                                      return resp;
+                                                    }).catch(function(error){
+                                                      console.log(error);
+                                                      return error;
+                                                    });
+                                                  };
+                  self.fetchEmployee();
+                }
+            ]);
+
+
 
 })(window.angular);
